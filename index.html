@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מערך שיעור מעשי: עיצוב לוגו "מקצב הרחוב" Hip-Hop</title>
+    <style>
+        :root {
+            --gold: #f59e0b;
+            --magenta: #ff007a;
+            --cyan: #00f2fe;
+            --bg-dark: #08080a;
+            --card-bg: #121318;
+            --card-inner: #050507;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #1e293b;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Assistant, Arial, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.8;
+            margin: 0;
+            padding: 30px 15px 100px 15px;
+        }
+
+        .container {
+            max-width: 920px;
+            margin: 0 auto;
+        }
+
+        /* כותרת כהה ואורבנית מטורללת עם אוואטר */
+        header {
+            background: linear-gradient(135deg, #121318, #08080a, #2a0018);
+            color: white;
+            padding: 30px 40px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(255, 0, 122, 0.2);
+            border: 1px solid var(--magenta);
+        }
+
+        .header-content { flex: 1; }
+        h1 { margin: 0 0 10px 0; font-size: 2.2rem; color: #ffffff; text-shadow: 0 0 12px rgba(255,0,122,0.6); }
+        .subtitle { font-size: 1.1rem; color: var(--gold); font-weight: 600; }
+
+        .avatar-header {
+            width: 105px;
+            height: 105px;
+            border-radius: 50%;
+            border: 3px solid var(--gold);
+            box-shadow: 0 0 25px rgba(245, 158, 11, 0.6);
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+            border: 1px solid var(--border);
+        }
+
+        h2 {
+            color: #ffffff;
+            margin-top: 0;
+            border-bottom: 3px solid var(--gold);
+            display: inline-block;
+            padding-bottom: 6px;
+            font-size: 1.5rem;
+        }
+
+        .step-title {
+            background: rgba(255, 0, 122, 0.15);
+            color: #ff007a;
+            padding: 10px 18px;
+            border-right: 5px solid var(--magenta);
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-top: 30px;
+            border: 1px solid rgba(255, 0, 122, 0.3);
+        }
+
+        /* סכמות ויזואליות למתחילים */
+        .diagram-container {
+            background: var(--card-inner);
+            border: 2px dashed var(--gold);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 20px 0;
+            text-align: center;
+            color: var(--text-light);
+        }
+
+        .diagram-svg {
+            max-width: 100%;
+            height: auto;
+            max-height: 260px;
+        }
+
+        /* משבצת ה-SVG והתוצאה הסופית */
+        .preview-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            header { flex-direction: column-reverse; text-align: center; }
+            .preview-grid { grid-template-columns: 1fr; }
+        }
+
+        .code-box {
+            background-color: #050507;
+            color: var(--cyan);
+            padding: 18px;
+            border-radius: 10px;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 0.85rem;
+            max-height: 340px;
+            overflow-y: auto;
+            direction: ltr;
+            text-align: left;
+            white-space: pre-wrap;
+            border: 1px solid #1e293b;
+        }
+
+        .result-box {
+            background: #050507;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .result-box svg {
+            max-width: 100%;
+            height: auto;
+            max-height: 300px;
+        }
+
+        .instruction-list { padding-right: 20px; }
+        .instruction-list li { margin-bottom: 14px; }
+
+        .color-badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 6px;
+            color: white;
+            font-weight: bold;
+            font-size: 0.85rem;
+            direction: ltr;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        .action-box {
+            background-color: rgba(245, 158, 11, 0.1);
+            border-right: 4px solid var(--gold);
+            padding: 15px;
+            border-radius: 6px;
+            margin: 18px 0;
+            font-weight: bold;
+            color: #e2e8f0;
+        }
+
+        /* חלונית צפה הייטקית (Floating Widget) */
+        .floating-bot {
+            position: fixed;
+            bottom: 25px;
+            left: 25px;
+            background: linear-gradient(135deg, var(--gold), var(--magenta));
+            color: white;
+            padding: 10px 20px 10px 12px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            box-shadow: 0 8px 25px rgba(255, 0, 122, 0.5);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            border: 2px solid var(--gold);
+        }
+
+        .floating-bot:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 12px 30px rgba(245, 158, 11, 0.6);
+        }
+
+        .floating-bot img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 2px solid white;
+            object-fit: cover;
+        }
+
+        .floating-bot-text {
+            font-weight: bold;
+            font-size: 0.95rem;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- כותרת ראשית כולל האוואטר -->
+    <header>
+        <div class="header-content">
+            <h1>מערך שיעור מעשי: לוגו "מקצב הרחוב" Hip-Hop</h1>
+            <div class="subtitle">סדנת עיצוב וקטורי אורבני (SVG) – מיקרופון וינטג', כתר מלוכה, שרשרת זהב וגרוב רחוב!</div>
+        </div>
+        <img class="avatar-header" src="https://lh3.googleusercontent.com/d/1BHxytxfATgrv3wpk_8slqpRX08p2Dzml" alt="Avatar">
+    </header>
+
+    <!-- מבוא למעצב המתחיל -->
+    <div class="card">
+        <h2>🎤 עקרונות העיצוב של מותג היפ-הופ & ראפ אורבני</h2>
+        <p>עיצוב לוגו עבור **"מקצב הרחוב"** (עמותה חברתית ולהקת היפ-הופ/ראפ) חייב לשדר **קצב, עוצמה, יוקרת רחוב (Bling) ומצוינות מוזיקלית**. הסמל מורכב מ-5 אלמנטים מרכזיים:</p>
+        <ul>
+            <li><strong>מיקרופון קלאסי (Shure-Style Vintage Mic):</strong> גוף מתכתי, ראש רשת אליפטי, מתג הפעלה וכבל ניאון מעוגל למטה.</li>
+            <li><strong>כתר מלוכה מוזהב (King Crown):</strong> ממוקם בראש המיקרופון עם אבני חן זוהרות ורודות וציאן.</li>
+            <li><strong>שרשרת גורמט מוזהבת (Heavy Gold Chain):</strong> קשת עקומת בזייר מקווקוות (`stroke-dasharray`) המקיפה את המיקרופון.</li>
+            <li><strong>רמקול וניאון רחוב (Speaker Ring & Neon Glow):</strong> מעגל רקע בעובי 5px עם הילה זוהרת בצבע מג'נטה ניאון.</li>
+            <li><strong>חריצי תקליט ויניל (Vinyl Record Grooves):</strong> טבעות מקווקוות ברקע הממחישות DJing ותרבות היפ-הופ שורשית.</li>
+        </ul>
+    </div>
+
+    <!-- חלק 1: בניית השרשרת וטבעת הרמקול -->
+    <div class="card">
+        <h2>חלק א': בניית טבעת הניאון ושרשרת הגורמט המוזהבת</h2>
+        
+        <div class="step-title">שלב 1.1: מעגל הרמקול הראשי והילת הניאון</div>
+        <ol class="instruction-list">
+            <li><strong>בסיס הרמקול:</strong> עיגול מרכזי ברדיוס `r="115"` עם מסגרת מודרגת מג'נטה <span class="color-badge" style="background:#ff007a;">#FF007A</span> ופילטר הילה (`neonGlow`).</li>
+            <li><strong>טבעת זהב פנימית:</strong> עיגול מקווקוו (`stroke-dasharray="10 6"`) בגוון זהב <span class="color-badge" style="background:#f59e0b; color:#000;">#F59E0B</span>.</li>
+        </ol>
+
+        <div class="step-title">שלב 1.2: יצירת שרשרת הזהב באמצעות עקומת בזייר (`<path d="M... C...">`)</div>
+        <p>שליטה בטכניקת הקווים המקווקווים מעניקה מראה של חוליות שרשרת זהב אמיתיות:</p>
+        <p><code style="color:var(--gold); font-size:0.9rem;">&lt;path d="M -75,30 C -50,110 50,110 75,30" stroke="url(#goldGrad)" stroke-width="12" stroke-dasharray="16 6" /&gt;</code></p>
+
+        <!-- סכמה שלב 1 -->
+        <div class="diagram-container">
+            <strong>סכמה 1: יצירת עקומת השרשרת וטבעת הרמקול</strong><br><br>
+            <svg class="diagram-svg" viewBox="0 0 300 180">
+                <!-- טבעת רמקול -->
+                <circle cx="150" cy="80" r="60" fill="#121318" stroke="#ff007a" stroke-width="4"/>
+                <circle cx="150" cy="80" r="50" fill="none" stroke="#f59e0b" stroke-width="2" stroke-dasharray="6,4"/>
+                <!-- שרשרת -->
+                <path d="M 110,95 C 120,135 180,135 190,95" fill="none" stroke="#f59e0b" stroke-width="8" stroke-dasharray="10 4"/>
+                <text x="150" y="168" font-size="11" fill="#94a3b8" text-anchor="middle">עקומת בזייר + stroke-dasharray ליצירת חוליות זהב</text>
+            </svg>
+        </div>
+    </div>
+
+    <!-- חלק 2: המיקרופון והכתר -->
+    <div class="card">
+        <h2>חלק ב': מיקרופון הווינטג' וכתר המלוכה</h2>
+        <p>לב הלוגו! שילוב של צורות גיאומטריות מדויקות ליצירת מיקרופון במה מקצועי וכתר יוקרתי.</p>
+
+        <div class="action-box">
+            💡 סוד המעצבים: ראש המיקרופון בנוי מנתיב קשתי (`<path>`) שברקע שלו רשת פסים מצטלבים (`grid lines`) המדמים את רשת המתכת של Shure!
+        </div>
+
+        <div class="step-title">שלב 2.1: מבנה המיקרופון (גוף, מתג וראש רשת)</div>
+        <ol class="instruction-list">
+            <li><strong>ידית אלומיניום:</strong> טרפז מודרג בגוון כסף <span class="color-badge" style="background:#94a3b8; color:#000;">#94A3B8</span>.</li>
+            <li><strong>מתג ON/OFF:</strong> מלבן כהה שבתוכו נורית מג'נטה קטנה.</li>
+            <li><strong>ראש הברזל:</strong> כיפה מעוגלת בטקסטורת פסים מצטלבים אנכית ואופקית.</li>
+        </ol>
+
+        <div class="step-title">שלב 2.2: יצירת כתר המלוכה המוזהב (`<polygon>`)</div>
+        <p>המצולע מוגדר על ידי 7 נקודות קודקוד שיוצרות את 3 שיני הכתר:</p>
+
+        <!-- סכמה שלב 2 -->
+        <div class="diagram-container">
+            <strong>סכמה 2: בניית המיקרופון והכתר</strong><br><br>
+            <svg class="diagram-svg" viewBox="0 0 300 200">
+                <!-- כתר -->
+                <polygon points="120,40 132,65 150,32 168,65 180,40 172,75 128,75" fill="#f59e0b" stroke="#78350f"/>
+                <circle cx="120" cy="40" r="3" fill="#ff007a"/>
+                <circle cx="150" cy="32" r="4" fill="#00f2fe"/>
+                <circle cx="180" cy="40" r="3" fill="#ff007a"/>
+                
+                <!-- ראש מיקרופון -->
+                <path d="M 130,110 C 130,80 170,80 170,110 Z" fill="#94a3b8" stroke="#1e293b" stroke-width="2"/>
+                <!-- גוף מיקרופון -->
+                <polygon points="138,115 162,115 158,160 142,160" fill="#64748b"/>
+                
+                <text x="150" y="188" font-size="11" fill="#00f2fe" font-weight="bold" text-anchor="middle">שילוב כתר מלך + מיקרופון וינטג' במרכז הבלוק</text>
+            </svg>
+        </div>
+    </div>
+
+    <!-- חלק 3: הטיפוגרפיה ואווירת השרטוט -->
+    <div class="card">
+        <h2>חלק ג': הטיפוגרפיה, השראת הראפ והפרדת הצבעים</h2>
+        <ol class="instruction-list">
+            <li><strong>שם הלהקה / העמותה:</strong> "מקצב הרחוב" בגופן ענק, בעובי 900 ובצבע לבן נקי <span class="color-badge" style="background:#ffffff; color:#000;">#FFFFFF</span> עם צל היקפי.</li>
+            <li><strong>כותרת משנה:</strong> "להקת היפ-הופ & ראפ ישראלי" בצבע מג'נטה זוהר <span class="color-badge" style="background:#ff007a;">#FF007A</span>.</li>
+            <li><strong>פס הפרדה אורבני:</strong> קו מוזהב שבמרכזו יהלום ציאן זוהר <span class="color-badge" style="background:#00f2fe; color:#000;">#00F2FE</span> ושתי נקודות מג'נטה.</li>
+            <li><strong>סלוגן:</strong> "ביטים עצבניים • מילים מהרחוב • מופע היפ-הופ חי".</li>
+        </ol>
+    </div>
+
+    <!-- משבצת קוד מול תוצאה מושלמת -->
+    <div class="card">
+        <h2>🔍 קוד ה-SVG מול התוצאה הוויזואלית</h2>
+        <p>השווה בין מבנה הקוד הוקטורי לבין התוצאה הסופית המרונדרת בדפדפן:</p>
+
+        <div class="preview-grid">
+            <div>
+                <strong>מבנה הקוד (SVG Code):</strong>
+                <div class="code-box">&lt;svg viewBox="0 0 800 650"&gt;
+  &lt;defs&gt;
+    &lt;linearGradient id="goldGrad"&gt;...&lt;/linearGradient&gt;
+    &lt;linearGradient id="magentaGrad"&gt;...&lt;/linearGradient&gt;
+    &lt;linearGradient id="cyanGrad"&gt;...&lt;/linearGradient&gt;
+  &lt;/defs&gt;
+
+  &lt;!-- רקע אורבני כהה --&gt;
+  &lt;rect width="100%" height="100%" fill="url(#bgGrad)" /&gt;
+
+  &lt;!-- סמל הלוגו המרכזי --&gt;
+  &lt;g transform="translate(400, 205)"&gt;
+    &lt;!-- טבעת רמקול ניאון --&gt;
+    &lt;circle r="115" stroke="url(#magentaGrad)" /&gt;
+
+    &lt;!-- שרשרת זהב --&gt;
+    &lt;path d="M -75,30 C -50,110 50,110 75,30"
+          stroke="url(#goldGrad)"
+          stroke-dasharray="16 6" /&gt;
+
+    &lt;!-- מיקרופון במה --&gt;
+    &lt;g transform="translate(0, -10)"&gt;...&lt;/g&gt;
+
+    &lt;!-- כתר מלוכה --&gt;
+    &lt;g transform="translate(0, -68)"&gt;
+      &lt;polygon points="-38,-20 -22,10 0,-30..."
+               fill="url(#goldGrad)" /&gt;
+    &lt;/g&gt;
+  &lt;/g&gt;
+
+  &lt;!-- טיפוגרפיה --&gt;
+  &lt;text x="400" y="430" fill="#FFFFFF"&gt;מקצב הרחוב&lt;/text&gt;
+&lt;/svg&gt;</div>
+            </div>
+
+            <div>
+                <strong>התוצאה הוויזואלית הסופית:</strong>
+                <div class="result-box">
+                    <svg viewBox="0 0 800 650" xmlns="http://www.w3.org/2000/svg">
+                      <defs>
+                        <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stop-color="#08080A" />
+                          <stop offset="50%" stop-color="#121318" />
+                          <stop offset="100%" stop-color="#050507" />
+                        </linearGradient>
+
+                        <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stop-color="#FFF099" />
+                          <stop offset="30%" stop-color="#F59E0B" />
+                          <stop offset="70%" stop-color="#D97706" />
+                          <stop offset="100%" stop-color="#78350F" />
+                        </linearGradient>
+
+                        <linearGradient id="magentaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stop-color="#FF007A" />
+                          <stop offset="100%" stop-color="#9D00FF" />
+                        </linearGradient>
+
+                        <linearGradient id="cyanGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stop-color="#00F2FE" />
+                          <stop offset="100%" stop-color="#4FACFE" />
+                        </linearGradient>
+
+                        <linearGradient id="silverGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                          <stop offset="0%" stop-color="#FFFFFF" />
+                          <stop offset="50%" stop-color="#94A3B8" />
+                          <stop offset="100%" stop-color="#334155" />
+                        </linearGradient>
+
+                        <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+                          <feDropShadow dx="0" dy="16" stdDeviation="18" flood-color="#000000" flood-opacity="0.8" />
+                        </filter>
+
+                        <filter id="neonGlow" x="-30%" y="-30%" width="160%" height="160%">
+                          <feGaussianBlur stdDeviation="8" result="blur" />
+                          <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                        </filter>
+                      </defs>
+
+                      <rect width="100%" height="100%" fill="url(#bgGrad)" rx="24" />
+
+                      <g opacity="0.12" stroke="url(#cyanGrad)" stroke-width="2" fill="none">
+                        <circle cx="400" cy="210" r="180" stroke-dasharray="12 12" />
+                        <circle cx="400" cy="210" r="210" stroke-dasharray="20 10" />
+                        <circle cx="400" cy="210" r="240" stroke-dasharray="8 16" />
+                        <path d="M 100,210 L 160,210 M 120,180 L 120,240 M 140,160 L 140,260 M 640,210 L 700,210 M 660,180 L 660,240 M 680,160 L 680,260" stroke-width="3" stroke-linecap="round" />
+                      </g>
+
+                      <g transform="translate(400, 205)" filter="url(#shadow)">
+                        <circle cx="0" cy="0" r="115" fill="#121318" stroke="url(#magentaGrad)" stroke-width="5" filter="url(#neonGlow)" />
+                        <circle cx="0" cy="0" r="100" fill="none" stroke="url(#goldGrad)" stroke-width="2" stroke-dasharray="10 6" />
+
+                        <g opacity="0.35" stroke="url(#silverGrad)" stroke-width="8" stroke-linecap="round">
+                          <line x1="-80" y1="-80" x2="80" y2="80" />
+                          <line x1="80" y1="-80" x2="-80" y2="80" />
+                        </g>
+
+                        <path d="M -75,30 C -50,110 50,110 75,30" fill="none" stroke="url(#goldGrad)" stroke-width="12" stroke-linecap="round" stroke-dasharray="16 6" filter="url(#shadow)" />
+
+                        <g transform="translate(0, -10)">
+                          <path d="M -8 75 L 8 75 L 5 95 L -5 95 Z" fill="#475569" />
+                          <path d="M 0 95 C 10 115 -10 125 0 140" fill="none" stroke="url(#cyanGrad)" stroke-width="4" stroke-linecap="round" />
+                          <path d="M -16 15 L 16 15 L 11 75 L -11 75 Z" fill="url(#silverGrad)" stroke="#0F172A" stroke-width="2" />
+                          <rect x="-3" y="35" width="6" height="14" rx="2" fill="#0F172A" />
+                          <rect x="-2" y="37" width="4" height="5" rx="1" fill="url(#magentaGrad)" />
+                          <rect x="-20" y="5" width="40" height="10" rx="3" fill="url(#goldGrad)" />
+                          <path d="M -28 5 C -28 -35 28 -35 28 5 C 28 12 -28 12 -28 5 Z" fill="url(#silverGrad)" stroke="#1E293B" stroke-width="2" />
+                          <path d="M -24 -10 L 24 -10 M -26 -18 L 26 -18 M -22 -26 L 22 -26 M -28 0 L 28 0" stroke="#334155" stroke-width="1.5" />
+                          <path d="M 0 -32 L 0 8 M -12 -30 L -12 8 M 12 -30 L 12 8" stroke="#334155" stroke-width="1.5" />
+                        </g>
+
+                        <g transform="translate(0, -68)" filter="url(#neonGlow)">
+                          <polygon points="-38,-20 -22,10 0,-30 22,10 38,-20 30,22 -30,22" fill="url(#goldGrad)" stroke="#78350F" stroke-width="1.5" />
+                          <circle cx="-38" cy="-20" r="4" fill="#FF007A" />
+                          <circle cx="0" cy="-30" r="5" fill="#00F2FE" />
+                          <circle cx="38" cy="-20" r="4" fill="#FF007A" />
+                          <circle cx="-15" cy="12" r="3" fill="#FFFFFF" />
+                          <circle cx="0" cy="12" r="3" fill="#FF007A" />
+                          <circle cx="15" cy="12" r="3" fill="#FFFFFF" />
+                          <rect x="-30" y="18" width="60" height="6" rx="2" fill="url(#goldGrad)" stroke="#451A03" stroke-width="1" />
+                        </g>
+
+                        <g filter="url(#neonGlow)">
+                          <path d="M -85 -10 L -65 -15 L -75 0 L -55 -5" fill="none" stroke="url(#cyanGrad)" stroke-width="3" stroke-linecap="round" />
+                          <path d="M 85 -10 L 65 -15 L 75 0 L 55 -5" fill="none" stroke="url(#magentaGrad)" stroke-width="3" stroke-linecap="round" />
+                        </g>
+                      </g>
+
+                      <g text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Assistant, Arial, sans-serif" direction="rtl">
+                        <text x="400" y="430" font-size="48" font-weight="900" fill="#FFFFFF" letter-spacing="1" filter="url(#shadow)">מקצב הרחוב</text>
+                        <text x="400" y="475" font-size="22" font-weight="800" fill="#FF007A" letter-spacing="2" filter="url(#neonGlow)">להקת היפ-הופ &amp; ראפ ישראלי</text>
+                        <g transform="translate(400, 502)">
+                          <line x1="-150" y1="0" x2="150" y2="0" stroke="url(#goldGrad)" stroke-width="3" stroke-linecap="round" />
+                          <polygon points="0,-7 7,0 0,7 -7,0" fill="#00F2FE" filter="url(#neonGlow)" />
+                          <circle cx="-80" cy="0" r="4" fill="#FF007A" />
+                          <circle cx="80" cy="0" r="4" fill="#FF007A" />
+                        </g>
+                        <text x="400" y="545" font-size="16" font-weight="600" fill="#94A3B8" letter-spacing="0.8">ביטים עצבניים • מילים מהרחוב • מופע היפ-הופ חי</text>
+                      </g>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- חלונית צפה מטורללת עם האוואטר המפנה לבוט -->
+<a href="https://gemini.google.com/gem/12Z7LVe1nfZ4yPIMzVAXQT1TGkSrVQZ11?usp=sharing" target="_blank" class="floating-bot" title="צריך עזרה? דבר איתי!">
+    <img src="https://lh3.googleusercontent.com/d/1BHxytxfATgrv3wpk_8slqpRX08p2Dzml" alt="Help Bot">
+    <span class="floating-bot-text">צריך עזרה? לחץ לבוט הלימוד 💬</span>
+</a>
+
+</body>
+</html>
